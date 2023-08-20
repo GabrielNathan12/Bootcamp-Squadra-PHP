@@ -1,0 +1,15 @@
+{
+    "name": "gabri/back-end",
+    "autoload": {
+        "psr-4": {
+            "Gabri\\BackEnd\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gabriel Nathan Almeida Silva Gabriel",
+            "email": "76185909+GabrielNathan12@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
