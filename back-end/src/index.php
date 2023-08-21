@@ -1,17 +1,6 @@
 <?php
 
-$rotas = [
-    '/uf' => 'ufAction',
-    '/municipio' => 'municipioAction'
-];
-
-function ufAction() {
-    echo "Página UF";
-}
-
-function municipioAction() {
-    echo "Página Município";
-}
+include('./rotas/rotas.php');
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
