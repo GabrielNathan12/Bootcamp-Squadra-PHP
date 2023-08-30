@@ -1,6 +1,0 @@
-<?php
-
-$rotas = [
-    '/uf' => '',
-    '/municipio' => ''
-];
