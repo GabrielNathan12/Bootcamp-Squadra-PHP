@@ -1,8 +1,11 @@
 <?php
-    require_once('../model/UF.php');
-
+    
     class ControladorUf{
-        private $uf;
+        private $ufDAO;
+
+        public function __construct(PDO $conexao){
+            $this->ufDAO = new UfDAO($conexao);
+        }
 
         public function criarUf(UF $uf){
 
@@ -13,8 +16,12 @@
         }
 
         public function listarUF(){
-
+            $data = $this->ufDAO->listarTodosUFs();
+           
+            return $data;
+    
         }
+
         public function deletarUF(){
             
         }
