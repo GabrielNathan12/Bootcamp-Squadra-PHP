@@ -24,7 +24,18 @@
                     break;
 
                     case 'PUT':
-                        break;
+                        $dados = json_decode(file_get_contents("php://input"), true);
+                        $codigoUF = $dados['codigoUF'];
+                        $nome = $dados['nome'];
+                        $sigla = $dados['sigla'];
+                        $status = $dados['status'];
+
+                        $uf = new UF($codigoUF, $nome, $sigla, $status);
+                        $listaUfs = $this->controladorUF->atualizarUF($codigoUF, $uf);
+
+                        return $listaUfs;
+                    break;
+
                     case 'DELETE':
                         break;
                     default:

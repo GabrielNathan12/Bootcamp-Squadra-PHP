@@ -47,8 +47,6 @@ class UfDAO {
             throw new ErrosDaAPI('Sigla ja inserido no Banco de Dados', 400);
         }
 
-        
-
         $status = $uf->getStatusUf();
 
         if(!is_int($status)){
@@ -74,7 +72,7 @@ class UfDAO {
 
     }
 
-    public function nomeExisteNoBD($nome){
+    private function nomeExisteNoBD($nome){
         $sql = "SELECT COUNT(*) FROM TB_UF WHERE nome = :nome";
         $stmt = $this->conexao->prepare($sql);
 
@@ -86,7 +84,7 @@ class UfDAO {
         return $count > 0;
     }
 
-    public function siglaExisteNoBD($sigla){
+    private function siglaExisteNoBD($sigla){
         $sql = "SELECT COUNT(*) FROM TB_UF WHERE sigla = :sigla";
         $stmt = $this->conexao->prepare($sql);
 
@@ -96,8 +94,73 @@ class UfDAO {
         $count = $stmt->fetchColumn();
 
         return $count > 0;
-
     }
 
+    private function codigoUfExisteNoBD($codigoUF){
+        $sql = 'SELECT COUNT(*) FROM TB_UF WHERE codigoUF = :codigoUF';
+        $stmt = $this->conexao->prepare($sql);
+        $stmt->bindParam(':codigoUF', $codigoUF);
+        $stmt->execute();
+
+        $count = $stmt->fetchColumn();
+
+        return $count > 0;
+    }
+
+    public function atualizarUF($codigoUF, UF $uf){
+      try{
+        if ($this->codigoUfExisteNoBD($codigoUF)) {
+            $nome = $uf->getNomeUf();
+            $sigla = $uf->getSiglaUf();
+            $status = $uf->getStatusUf();
+            
+            if(!is_string($sigla)){
+                throw new ErrosDaAPI('Sigla não é uma string', 400); 
+            }
+            $siglaSemEspaco = trim($sigla);
+            $siglaUperCase = strtoupper($siglaSemEspaco);
+    
+            if(strlen($siglaUperCase) != 2 ){
+                throw new ErrosDaAPI('Sigla não possui 2 caracteres', 400); 
+            }
+
+            if(!is_string($nome)){
+                throw new ErrosDaAPI('Nome não é uma string', 400); 
+             }
+             
+            if(!is_int($status)){
+                throw new ErrosDaAPI('Status não é um número', 400);
+            }
+            else if($status != 1 and $status != 2){
+                throw new ErrosDaAPI('Status com valor inválido', 400);
+            }
+
+            $sql = "UPDATE TB_UF SET nome = :nome, sigla = :sigla, status = :status WHERE codigoUF = :codigoUF";
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindParam(':codigoUF', $codigoUF);
+            $stmt->bindParam(':nome', $nome);
+            $stmt->bindParam(':sigla', $siglaUperCase);
+            $stmt->bindParam(':status', $status);
+
+            $stmt->execute();
+
+            return $this->listarTodosUFs();  
+        }
+        else {
+            throw new ErrosDaAPI('Código da UF não existe no Banco de Dados', 400);
+        }
+      }
+      catch(PDOException $e){
+        if($e->getCode() == '23505'){
+            throw new ErrosDaAPI('Dados duplicados: A sigla ou nome já estão inclusos no banco de dado', 400);
+        }
+        else {
+            throw new ErrosDaAPI('Erro interno no servidor: '. $e->getMessage());
+        }
+      }
+        
+    }
+    
+    
 }
 
