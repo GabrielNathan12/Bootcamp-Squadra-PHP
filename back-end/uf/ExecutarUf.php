@@ -50,11 +50,11 @@
                         break;
                     default:
                         http_response_code(500);
-                        return json_encode(array("message" => "Requisição não implementada"));
+                        return json_encode(array("mensagem" => "Requisição não implementada"));
                 }
            }
-           catch(Exception $error){
-                return $error->getMessage();
+           catch(Exception $e){
+                return $e->getMessage();
            } 
             
         }

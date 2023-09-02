@@ -97,7 +97,7 @@ public function listarTodosUFs() {
         $nome = $uf->getNomeUf();
         
         if(!is_string($nome)){
-           throw new ErrosDaAPI('Nome não é uma string', 400); 
+            throw new ErrosDaAPI('Nome não é uma string', 400); 
         }
 
         $nomeSemEspaco = trim($nome);
