@@ -95,7 +95,7 @@
             $id = preg_replace('/[^0-9]/', '', $id);
             $id = intval($id);
 
-            $dados = $this->municipioDAO->deketarMunicipio($id);
+            $dados = $this->municipioDAO->deletarMunicipio($id);
             return $dados;
         }
     }
