@@ -143,4 +143,61 @@
                 }
               }            
         }
+        private function codigoMunicipioExisteNoBD($codigoMunicipio){
+            $sql = "SELECT COUNT(*) FROM TB_MUNICIPIO WHERE codigoMunicipio = :codigoMunicipio";
+            $stmt = $this->conexao->prepare($sql);
+
+            $stmt->bindParam(':codigoMunicipio', $codigoMunicipio);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+
+            return $count > 0;
+        }
+        public function atualizarMunicipio($codigoMunicipio, Municipio $municipio){
+            try{
+                if($this->codigoMunicipioExisteNoBD($codigoMunicipio)){
+                    $codigoUF = $municipio->getCodigoUf();
+                    $nome = $municipio->getNomeMunicipio();
+                    $status = $municipio->getStatusMunicipio();
+                    $achouUF = $this->verificaCodigoUF($codigoUF);
+
+                    if(!$achouUF){
+                        throw new ErrosDaAPI('Esse codigoUF não existe no banco de dados', 400);
+                    }
+                    if(!is_string($nome)){
+                        throw new ErrosDaAPI('Nome não é uma string', 400); 
+                     }
+                     
+                    if(!is_int($status)){
+                        throw new ErrosDaAPI('Status não é um número', 400);
+                    }
+                    else if($status != 1 and $status != 2){
+                        throw new ErrosDaAPI('Status com valor inválido', 400);
+                    }
+
+                    $sql = "UPDATE TB_MUNICIPIO SET codigoUF = :codigoUF, nome = :nome, status = :status WHERE codigoMunicipio = :codigoMunicipio";
+                    $stml = $this->conexao->prepare($sql);
+                    $stml->bindParam(':codigoMunicipio', $codigoMunicipio);
+                    $stml->bindParam(':codigoUF', $codigoUF);
+                    $stml->bindParam(':nome', $nome);
+                    $stml->bindParam(':status', $status);
+                    $stml->execute();
+
+                    return $this->listarMunicipios();
+
+                }
+                else{
+                    throw new ErrosDaAPI('Código do municipio não existe no Banco de Dados', 400);
+                }
+            }
+            catch(PDOException $e){
+                if($e->getCode() == '23505'){
+                    throw new ErrosDaAPI('Dados duplicados: nome já estão inclusos no banco de dado para essa UF', 400);
+                }
+                else {
+                    throw new ErrosDaAPI('Erro interno no servidor: '. $e->getMessage());
+                }
+              }    
+            
+        }
     }

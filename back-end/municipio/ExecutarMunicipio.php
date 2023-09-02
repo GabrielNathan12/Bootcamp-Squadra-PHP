@@ -21,16 +21,8 @@
                     break;
 
                     case 'PUT':
-                        $dados = json_decode(file_get_contents('php://input', true));
-                        $codigoMunicipio = $dados['codigoMunicipio'];
-                        $codigoUF = $dados['codigoUF'];
-                        $nome = $dados['nome'];
-                        $status = $dados['status'];
-
-                        $municipio = new Municipio($codigoMunicipio, $codigoUF, $nome, $status);
-
-                        //$listaMunicipios = $this->controladorMunicipio->atualizarMunicipio($codigoMunicipio, $municipio);
-                        //return $listaMunicipios;
+                        $listaMunicipios = $this->controladorMunicipio->atualizarMunicipio();
+                        return $listaMunicipios;
                     break;
 
                     case 'DELETE':
