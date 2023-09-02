@@ -52,10 +52,8 @@
 
         public function atualizarUF($codigoUF ,UF $uf){
             try{
-                return $this->ufDAO->atualizarUF($codigoUF, $uf);
-
-                //$this->verificarCamposNulosParaAtualizacao($codigoUF, $nome, $sigla, $status);
-
+                $this->verificarCamposNulosParaAtualizacao($uf->getCodigoUf(), $uf->getNomeUf(), $uf->getSiglaUf(), $uf->getStatusUf());
+                    return $this->ufDAO->atualizarUF($codigoUF, $uf);
             }
             catch(Exception $e){
                 if($e instanceof ErrosDaAPI) {
@@ -89,7 +87,8 @@
     
         }
 
-        public function deletarUF(){
-            
+        public function deletarUF($codigoUF){
+            $data = $this->ufDAO->excluirUF($codigoUF);
+            return $data;
         }
     }

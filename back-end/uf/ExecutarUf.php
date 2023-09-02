@@ -37,6 +37,16 @@
                     break;
 
                     case 'DELETE':
+                        $url = parse_url($_SERVER['REQUEST_URI']);
+                        $codigoUF = explode('/uf', $url['path']);
+                        
+                        $id = end($codigoUF);
+                        $id = preg_replace('/[^0-9]/', '', $id);
+                        $id = intval($id);
+                       
+                        $listaUfs = $this->controladorUF->deletarUF($id);
+                        return $listaUfs;
+
                         break;
                     default:
                         http_response_code(500);

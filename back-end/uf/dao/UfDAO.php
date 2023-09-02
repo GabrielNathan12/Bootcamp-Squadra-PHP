@@ -157,10 +157,22 @@ class UfDAO {
         else {
             throw new ErrosDaAPI('Erro interno no servidor: '. $e->getMessage());
         }
-      }
-        
+      }    
     }
-    
+
+    public function excluirUF($codigoUF){
+        if($this->codigoUfExisteNoBD($codigoUF)){
+            $sql = 'DELETE FROM TB_UF WHERE codigoUF = :codigoUF';
+            $stmt = $this->conexao->prepare($sql);
+            $stmt->bindParam(':codigoUF', $codigoUF);
+            $stmt->execute();
+
+            return $this->listarTodosUFs();
+
+        }else {
+            throw new ErrosDaAPI('Código da UF não existe no Banco de Dados', 400);
+        }
+    }
     
 }
 
