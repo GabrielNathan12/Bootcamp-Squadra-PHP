@@ -197,7 +197,19 @@
                 else {
                     throw new ErrosDaAPI('Erro interno no servidor: '. $e->getMessage());
                 }
-              }    
-            
+              }
+        }
+
+        public function deketarMunicipio($codigoMunicipio){
+            if($this->codigoMunicipioExisteNoBD($codigoMunicipio)){
+                $sql = 'DELETE FROM TB_MUNICIPIO WHERE codigoMunicipio = :codigoMunicipio';
+                $stmt = $this->conexao->prepare($sql);
+                $stmt->bindParam(':codigoMunicipio', $codigoMunicipio);
+                $stmt->execute();
+                return $this->listarMunicipios();
+            }
+            else {
+                throw new ErrosDaAPI('Código da Municipio não existe no Banco de Dados', 400);
+            }
         }
     }

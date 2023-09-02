@@ -26,15 +26,8 @@
                     break;
 
                     case 'DELETE':
-                        $url = parse_url($_SERVER['REQUEST_URI']);
-                        $codigoMunicipio = explode('/municipio', $url['path']);
-                        
-                        $id = end($codigoMunicipio);
-                        $id = preg_replace('/[^0-9]/', '', $id);
-                        $id = intval($id);
-
-                       // $listaMunicipios = $this->controladorMunicipio->deletarMunicipio($id);
-                        //return $listaMunicipios;
+                       $listaMunicipios = $this->controladorMunicipio->deletarMunicipio();
+                        return $listaMunicipios;
                     break;
                     default:
                         http_response_code(500);

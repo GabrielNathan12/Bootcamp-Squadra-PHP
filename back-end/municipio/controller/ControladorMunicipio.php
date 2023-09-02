@@ -87,4 +87,15 @@
                 throw new ErrosDaAPI('Campo status está definido como null', 400);
             }
         }
+        public function deletarMunicipio(){
+            $url = parse_url($_SERVER['REQUEST_URI']);
+            $codigoMunicipio = explode('/municipio', $url['path']);
+            
+            $id = end($codigoMunicipio);
+            $id = preg_replace('/[^0-9]/', '', $id);
+            $id = intval($id);
+
+            $dados = $this->municipioDAO->deketarMunicipio($id);
+            return $dados;
+        }
     }
