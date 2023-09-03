@@ -25,8 +25,19 @@
 
             return $count > 0;
         }
+        private function codigoEnderecoExiste($codigoEndereco){
+            $sql = "SELECT COUNT(*) FROM TB_ENDERECO WHERE codigoEndereco = :codigoEndereco";
+            $stmt = $this->conexao->prepare($sql);
+
+            $stmt->bindParam(':codigoEndereco', $codigoEndereco);
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+
+            return $count > 0;
+        }
         private function criarEnderecos($codigoPessoa, $enderecos){
             try{
+               
                 $codigoPessoa = intval($codigoPessoa);
                 if($this->codigoPessoaExiste($codigoPessoa)){
                     foreach($enderecos as $endereco){
@@ -156,9 +167,126 @@
                 }
             }  
         }
-        public function atualizarPessoa($codigoPessoa, Pessoa $pessoa){
+        public function atualizarPessoa($codigoPessoa, Pessoa $pessoa, $codigoEndereco, $enderecos){
+            try {
+                if ($this->codigoPessoaExiste($codigoPessoa)) {
+                    $codigoPessoa = $pessoa->getCodigoPessoa();
+                    $nome = $pessoa->getNomePessoa();
+                    $sobrenome = $pessoa->getSobrenome();
+                    $idade = $pessoa->getIdade();
+                    $login = $pessoa->getLogin();
+                    $senha = $pessoa->getSenha();
+                    $status = $pessoa->getStatus();
+        
+                    if(!is_string($nome)) {
+                        throw new ErrosDaAPI('Nome não é uma string', 400);
+                    }
+                    if(!is_string($sobrenome)) {
+                        throw new ErrosDaAPI('Sobrenome não é uma string', 400);
+                    }
+                    if(!is_string($login)) {
+                        throw new ErrosDaAPI('Login não é uma string', 400);
+                    }
+                    if(!is_string($senha)) {
+                        throw new ErrosDaAPI('Senha não é uma string', 400);
+                    }
+        
+                    if(!is_int($idade)) {
+                        throw new ErrosDaAPI('Idade não é um número', 400);
+                    }
+                    if(!is_int($status)){
+                        throw new ErrosDaAPI('Status não é um número', 400);
+                    }
+                    else if($status != 1 and $status != 2){
+                        throw new ErrosDaAPI('Status com valor inválido', 400);
+                    }
+                    $sql = "UPDATE TB_PESSOA SET nome = :nome, sobrenome = :sobrenome, idade = :idade, login = :login,
+                            senha = :senha, status = :status  WHERE codigoPessoa = :codigoPessoa";
+        
+                    $stmt = $this->conexao->prepare($sql);
+                    $stmt->bindParam(':codigoPessoa', $codigoPessoa);
+                    $stmt->bindParam(':nome', $nome);
+                    $stmt->bindParam(':sobrenome', $sobrenome);
+                    $stmt->bindParam(':idade', $idade);
+                    $stmt->bindParam(':login', $login);
+                    $stmt->bindParam(':senha', $senha);
+                    $stmt->bindParam(':status', $status);
+                    $stmt->execute();
+        
+                    $this->atualizarEndereco($codigoPessoa, $codigoEndereco, $enderecos);
 
+                    $resultado = $this->listarPessoa();
+                    return $resultado;
+                } else {
+                    throw new ErrosDaAPI('Código de Pessoa não existe no banco de dados', 400);
+                }
+            } catch (PDOException $e) {
+                if ($e->getCode() == '23505') {
+                    throw new ErrosDaAPI('Dados duplicados: email já estão inclusos no banco de dados', 400);
+                } else {
+                    throw new ErrosDaAPI('Erro interno no servidor: ' . $e->getMessage());
+                }
+            }
         }
+        
+        private function atualizarEndereco($codigoPessoa, $codigoEndereco, $enderecos){
+            try {
+                if($this->codigoEnderecoExiste($codigoEndereco)){
+                    foreach ($enderecos as $endereco) {
+                        $codigoEndereco = $endereco['codigoEndereco'];
+                        $codigoBairro = $endereco['codigoBairro'];
+                        $nomeRua = $endereco['nomeRua'];
+                        $numero = $endereco['numero'];
+                        $complemento = $endereco['complemento'];
+                        $cep = $endereco['cep'];
+            
+                        if (!$this->codigoBairroExiste($codigoBairro)) {
+                            throw new ErrosDaAPI('Código de Bairro não existe no Banco de Dados', 400);
+                        }
+                        if (!is_string($nomeRua)) {
+                            throw new ErrosDaAPI('Nome da Rua não é uma string', 400);
+                        }
+            
+                        if (!is_string($numero)) {
+                            throw new ErrosDaAPI('Número não é uma string', 400);
+                        }
+            
+                        if (!is_string($complemento)) {
+                            throw new ErrosDaAPI('Complemento não é uma string', 400);
+                        }
+            
+                        if (!is_string($cep)) {
+                            throw new ErrosDaAPI('CEP não é uma string', 400);
+                        } else if (strlen($cep) > 9) {
+                            throw new ErrosDaAPI('CEP possui mais de 9 caracteres', 400);
+                        }
+            
+                        $sql = "UPDATE TB_ENDERECO SET codigoPessoa = :codigoPessoa, codigoBairro = :codigoBairro,
+                        nomeRua = :nomeRua, numero = :numero, complemento = :complemento, cep = :cep 
+                        WHERE codigoEndereco = :codigoEndereco";
+                        $stmt = $this->conexao->prepare($sql);
+
+                        $stmt->bindParam(':codigoPessoa', $codigoPessoa);
+                        $stmt->bindParam(':codigoBairro', $codigoBairro);
+                        $stmt->bindParam(':nomeRua', $nomeRua);
+                        $stmt->bindParam(':numero', $numero);
+                        $stmt->bindParam(':complemento', $complemento);
+                        $stmt->bindParam(':cep', $cep);
+                        $stmt->bindParam(':codigoEndereco', $codigoEndereco);
+                        $stmt->execute();
+                    }
+                }else {
+                    throw new ErrosDaAPI('Codigo endereco nao existe', 400);
+                }
+            } catch (ErrosDaAPI $e) {
+                http_response_code($e->getCode());
+                echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+            }
+        }
+        
         public function deletarPessoa($codigoPessoa){
             if($this->codigoPessoaExiste($codigoPessoa)){
                 $sql = 'DELETE FROM TB_PESSOA WHERE codigoPessoa = :codigoPessoa';
@@ -176,6 +304,10 @@
             $stmt = $this->conexao->prepare($sql);
             $stmt->execute();
             $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            foreach ($resultado as &$pessoa) {
+                $pessoa['enderecos'] = [];
+            }
             return $resultado;
         }
     }

@@ -87,7 +87,89 @@
         }
 
         public function atualizarPessoa(){
+            try{
+                $dados = json_decode(file_get_contents('php://input'), true);
+                $codigoPessoa = $dados['codigoPessoa'];
+                $nome = $dados['nome'];
+                $sobrenome = $dados['sobrenome'];
+                $idade = $dados['idade'];
+                $login = $dados['login'];
+                $senha = $dados['senha'];
+                $status = $dados['status'];
+                $enderecos = $dados['enderecos'];
+                
+                $pessoa = new Pessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status);
+                $this->verificarCamposNulosParaAtualizacaoPessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status);
 
+                if(isset($dados['enderecos']) && is_array($dados['enderecos'])) {
+                    foreach ($dados['enderecos'] as $endereco) {
+                        $codigoEndereco = $endereco['codigoEndereco'];
+                        $codigoBairro = $endereco['codigoBairro'];
+                        $nomeRua = $endereco['nomeRua'];
+                        $numero = $endereco['numero'];
+                        $complemento = $endereco['complemento'];
+                        $cep = $endereco['cep'];
+                        $this->verificarCamposNulosParaAtualizacaoEndereco($codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep);
+                    }
+                }
+              
+                $dados = $this->pessoaDAO->atualizarPessoa($codigoPessoa, $pessoa, $codigoEndereco, $enderecos);
+                return $dados;
+
+            }
+            catch(Exception $e){
+                if($e instanceof ErrosDaAPI){
+                    http_response_code($e->getCode());
+                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                }
+                else {
+                    http_response_code(500); 
+                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                }
+            }
+        }
+        private function verificarCamposNulosParaAtualizacaoEndereco($codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep){
+            if(is_null($codigoEndereco)){
+                throw new ErrosDaAPI('Campo codigoEndereco está definido como null', 400);
+            }
+            else if(is_null($codigoBairro)){
+                throw new ErrosDaAPI('Campo codigoBairro está definido como null', 400);
+            }
+            else if(is_null($nomeRua)){
+                throw new ErrosDaAPI('Campo nomeRua está definido como null', 400);
+            }
+            else if(is_null($numero)){
+                throw new ErrosDaAPI('Campo numero está definido como null', 400);
+            }
+            else if(is_null($complemento)){
+                throw new ErrosDaAPI('Campo complemento está definido como null', 400);
+            }
+            else if(is_null($cep)){
+                throw new ErrosDaAPI('Campo cep está definido como null', 400);
+            }
+        }
+        private function verificarCamposNulosParaAtualizacaoPessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status){
+            if(is_null($codigoPessoa)){
+                throw new ErrosDaAPI('Campo codigoPessoa está definido como null', 400);
+            }
+            else if(is_null($nome)){
+                throw new ErrosDaAPI('Campo nome está definido como null', 400);
+            }
+            else if(is_null($sobrenome)){
+                throw new ErrosDaAPI('Campo sobrenome está definido como null', 400);
+            }
+            else if(is_null($idade)){
+                throw new ErrosDaAPI('Campo idade está definido como null', 400);
+            }
+            else if(is_null($login)){
+                throw new ErrosDaAPI('Campo login está definido como null', 400);
+            }
+            else if(is_null($senha)){
+                throw new ErrosDaAPI('Campo senha está definido como null', 400);
+            }
+            else if(is_null($status)){
+                throw new ErrosDaAPI('Campo status está definido como null', 400);
+            }
         }
         public function deletarPessoa(){
             $url = parse_url($_SERVER['REQUEST_URI']);
