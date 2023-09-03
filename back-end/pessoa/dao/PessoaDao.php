@@ -160,7 +160,16 @@
 
         }
         public function deletarPessoa($codigoPessoa){
-
+            if($this->codigoPessoaExiste($codigoPessoa)){
+                $sql = 'DELETE FROM TB_PESSOA WHERE codigoPessoa = :codigoPessoa';
+                $stmt = $this->conexao->prepare($sql);
+                $stmt->bindParam(':codigoPessoa', $codigoPessoa);
+                $stmt->execute();
+                return $this->listarPessoa();
+            }
+            else {
+                throw new ErrosDaAPI('Código da pessoa não existe no Banco de Dados', 400);
+            }
         }
         public function listarPessoa(){
             $sql = "SELECT * FROM TB_PESSOA";

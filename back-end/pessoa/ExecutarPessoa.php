@@ -28,15 +28,9 @@
                     break;
 
                     case 'DELETE':
-                        $url = parse_url($_SERVER['REQUEST_URI']);
-                        $codigoUF = explode('/uf', $url['path']);
-                        
-                        $id = end($codigoUF);
-                        $id = preg_replace('/[^0-9]/', '', $id);
-                        $id = intval($id);
                        
-                        $listaUfs = $this->controladorPessoa->deletarPessoa($id);
-                        return $listaUfs;
+                        $listarPessoa = $this->controladorPessoa->deletarPessoa();
+                        return $listarPessoa;
 
                         break;
                     default:

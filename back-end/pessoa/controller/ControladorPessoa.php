@@ -90,7 +90,15 @@
 
         }
         public function deletarPessoa(){
+            $url = parse_url($_SERVER['REQUEST_URI']);
+            $codigoPessoa = explode('/pessoa', $url['path']);
+            
+            $id = end($codigoPessoa);
+            $id = preg_replace('/[^0-9]/', '', $id);
+            $id = intval($id);
 
+            $dados = $this->pessoaDAO->deletarPessoa($id);
+            return $dados;
         }
         public function listarPessoa(){
             $listaPessoas = $this->pessoaDAO->listarPessoa();
