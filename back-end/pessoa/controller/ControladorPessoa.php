@@ -104,12 +104,13 @@
                 if(isset($dados['enderecos']) && is_array($dados['enderecos'])) {
                     foreach ($dados['enderecos'] as $endereco) {
                         $codigoEndereco = $endereco['codigoEndereco'];
+                        $codigoPessoa = $endereco['codigoPessoa'];
                         $codigoBairro = $endereco['codigoBairro'];
                         $nomeRua = $endereco['nomeRua'];
                         $numero = $endereco['numero'];
                         $complemento = $endereco['complemento'];
                         $cep = $endereco['cep'];
-                        $this->verificarCamposNulosParaAtualizacaoEndereco($codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep);
+                        $this->verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa,$codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep);
                     }
                 }
               
@@ -128,8 +129,11 @@
                 }
             }
         }
-        private function verificarCamposNulosParaAtualizacaoEndereco($codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep){
-            if(is_null($codigoEndereco)){
+        private function verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa,$codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep){
+            if(is_null($codigoPessoa)){
+                throw new ErrosDaAPI('Campo codigoPessoa está definido como null', 400);
+            }
+            else if(is_null($codigoEndereco)){
                 throw new ErrosDaAPI('Campo codigoEndereco está definido como null', 400);
             }
             else if(is_null($codigoBairro)){

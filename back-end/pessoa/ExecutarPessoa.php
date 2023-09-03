@@ -9,7 +9,7 @@
         public function executar($requisicao){
             try{
                 switch ($requisicao){
-                    case 'GET':  
+                    case 'GET':
                         $listaUfs = $this->controladorPessoa->listarPessoa();
                         return $listaUfs;
 
