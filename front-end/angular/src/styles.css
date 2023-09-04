@@ -1,1 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
+*{
+  padding: 0;
+  margin: 0;
+  font-family: Cambria;
+  box-sizing: border-box;
+}
+a{
+  text-decoration: none;
+  color: red;
+  transition: .4s;
+}
+a{
+  color: blue;
+  transition: .4s;
+}

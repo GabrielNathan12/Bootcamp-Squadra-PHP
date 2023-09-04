@@ -1,0 +1,19 @@
+nav{
+  display: flex;
+  justify-content: space-between;
+  padding: 1em;
+  border-bottom: 1px solid #777;
+}
+.brand, .links{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.links li{
+  margin-right: 1em;
+  list-style: none;
+}
+
+.links a{
+  padding: 0.1em 0.3 em;
+}

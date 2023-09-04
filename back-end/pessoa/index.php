@@ -4,8 +4,7 @@
     require_once('../pessoa/controller/ControladorPessoa.php');
     require_once('../pessoa/dao/PessoaDao.php');
     require_once('../pessoa/model/Pessoa.php');
-    
-    require_once('../endereco/model/Endereco.php');
+
 
     require_once('../sistema/ErrosDaAPI.php');
     

@@ -335,9 +335,7 @@
                 LEFT JOIN TB_BAIRRO TB ON TE.codigoBairro = TB.codigoBairro
                 LEFT JOIN TB_MUNICIPIO TM ON TB.codigoMunicipio = TM.codigoMunicipio
                 LEFT JOIN TB_UF TU ON TM.codigoUF = TU.codigoUF
-                WHERE 1=1";  // Começamos com 1=1 para facilitar a concatenação de cláusulas WHERE
-            
-                // Não adicionamos condições de filtro para nome e sobrenome neste caso
+                WHERE 1=1";
             
                 if (isset($_GET['codigoPessoa'])) {
                     $codigoPessoa = intval($_GET['codigoPessoa']);
@@ -383,7 +381,7 @@
                 if (count($resultado) > 0) {
                     foreach ($resultado as &$posicao) {
                         $enderecosDecodificados = json_decode($posicao['enderecos'], true);
-                        $row['enderecos'] = $enderecosDecodificados;
+                        $posicao['enderecos'] = $enderecosDecodificados;
                     }
                     return $resultado;
                 } else {
