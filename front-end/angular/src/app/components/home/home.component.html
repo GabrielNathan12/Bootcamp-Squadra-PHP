@@ -1,1 +1,39 @@
-<p>home works!</p>
+<div *ngFor="let uf of UfLista">
+  <p>Código UF: {{ uf.codigouf }}</p>
+  <p>Sigla: {{ uf.sigla }}</p>
+  <p>Nome: {{ uf.nome }}</p>
+  <p>Status: {{ uf.status }}</p>
+</div>
+
+<div *ngFor="let municipio of MunicipioLista">
+  <p>Codigo Municipio: {{municipio.codigomunicipio}}</p>
+  <p>Codigo UF: {{municipio.codigouf}}</p>
+  <p>Nome Municipio: {{municipio.nome}}</p>
+  <p>Status: {{municipio.status}}</p>
+</div>
+
+<div *ngFor="let bairro of bairroLista">
+  <p>Codigo Bairro: {{bairro.codigobairro}}</p>
+  <p>Codigo Municipio: {{bairro.codigomunicipio}}</p>
+  <p>Nome Bairro: {{bairro.nome}}</p>
+  <p>Status: {{bairro.status}}</p>
+</div>
+
+<div *ngFor="let pessoa of pessoaLista">
+  <p>Nome da Pessoa: {{pessoa.nome}}</p>
+  <p>Sobrenome da Pessoa: {{pessoa.sobrenome}}</p>
+  <p>Idade: {{pessoa.idade}}</p>
+  <p>Login: {{pessoa.login}}</p>
+  <p>Status: {{pessoa.status}}</p>
+
+  <div *ngFor="let endereco of pessoa.enderecos">
+    <p>Endereço</p>
+    <p>Código do Endereço: {{endereco.codigoEndereco}}</p>
+    <p>Codigo do Bairro: {{endereco.codigoBairro}}</p>
+    <p>Nome rua: {{endereco.nomeRua}}</p>
+    <p>Numero: {{endereco.numero}}</p>
+    <p>Complemento: {{endereco.complemento}}</p>
+    <p>CEP: {{endereco.cep}}</p>
+  </div>
+</div>
+

@@ -1,6 +1,6 @@
-export interface MunicipioI{
-  codigoBairro: number,
-  codigoMunicipio: number,
+export interface BairroI{
+  codigobairro?: number,
+  codigomunicipio: number,
   nome: string,
   status: number
 }

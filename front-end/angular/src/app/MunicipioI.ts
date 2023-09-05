@@ -1,6 +1,6 @@
 export interface MunicipioI{
-  codigoMunicipio: number,
-  codigoUF: number,
+  codigomunicipio?: number,
+  codigouf: number,
   nome: string,
   status: number
 }

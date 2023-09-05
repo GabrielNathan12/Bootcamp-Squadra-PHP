@@ -1,4 +1,8 @@
 <?php
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header('Content-Type: application/json');
     require_once('../sistema/ConectarBD.php');
     require_once('../uf/ExecutarUf.php');
     require_once('../uf/controller/ControladorUf.php');
@@ -7,7 +11,7 @@
 
     require_once('../sistema/ErrosDaAPI.php');
     
-    header('Content-Type: application/json');
+    
 
 
     $requisicao = $_SERVER['REQUEST_METHOD'];

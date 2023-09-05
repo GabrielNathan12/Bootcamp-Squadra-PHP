@@ -6,7 +6,9 @@
     require_once('../municipio/controller/ControladorMunicipio.php');
     require_once('../municipio/model/Municipio.php');
 
-
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
     header('Content-Type: application/json');
 
     $requisicao = $_SERVER['REQUEST_METHOD'];
