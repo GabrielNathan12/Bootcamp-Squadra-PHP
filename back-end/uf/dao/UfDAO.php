@@ -86,12 +86,8 @@ public function listarTodosUFs() {
         $stmt->execute();
         $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     return $resultado;
 }
-
-    
-    
 
     public function criarUf(UF $uf){
         $nome = $uf->getNomeUf();
@@ -140,9 +136,8 @@ public function listarTodosUFs() {
         $stmt->bindParam(':status',$status);
 
         $stmt->execute();
-
-        $resultado = $this->listarTodosUFs();
         
+        $resultado = $this->listarTodosUFs();
         return $resultado;
 
     }

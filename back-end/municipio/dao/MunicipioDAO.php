@@ -55,7 +55,7 @@
                     }
                 }
                 else if($codigoUF){
-                    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if(!$resultado){
                         return [];
                     }else{

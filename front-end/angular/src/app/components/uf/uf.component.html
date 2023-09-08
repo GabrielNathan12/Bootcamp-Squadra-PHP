@@ -1,18 +1,21 @@
-<form (ngSubmit)="enviar()"[formGroup]="ufForm" #formDir="ngForm">
+<form (ngSubmit)="enviar()" [formGroup]="ufForm" #formDir="ngForm">
   <div class="form-group">
-    <label for="title">Nome:</label>
-    <input type="text" placeholder="Nome do estado" formControlName="nome" required/>
+    <label for="nome">Nome:</label>
+    <input type="text" placeholder="Nome do estado" formControlName="nome" required />
+    <div *ngIf="nome.invalid && formDir.submitted" class="validacao-error">O nome do estado é obrigatório</div>
   </div>
-  <div *ngIf="nome.invalid && formDir.submitted" class="validacao-error">O nome do estado e obrigatorio</div>
+
   <div class="form-group">
-    <label for="title">Sigla:</label>
-    <input type="text" placeholder="Sigla do Estado" formControlName="sigla" required/>
+    <label for="sigla">Sigla:</label>
+    <input type="text" placeholder="Sigla do Estado" formControlName="sigla" required />
+    <div *ngIf="sigla.invalid && formDir.submitted" class="validacao-error">A sigla do estado é obrigatória</div>
   </div>
-  <div *ngIf="sigla.invalid && formDir.submitted" class="validacao-error">A sigla do estado e obrigatorio</div>
+
   <div class="form-group">
-    <label for="title">Status:</label>
-    <input type="number" placeholder="Status" min="1" max="2" formControlName="status" required/>
+    <label for="status">Status:</label>
+    <input type="number" placeholder="Status" min="1" max="2" formControlName="status" required />
+    <div *ngIf="status.invalid && formDir.submitted" class="validacao-error">O Status do estado é obrigatório</div>
   </div>
-  <div *ngIf="status.invalid && formDir.submitted" class="validacao-error">O Status do estado e obrigatorio</div>
-  <input type="submit"/>
+
+  <input type="submit" value="Adicionar UF"/>
 </form>

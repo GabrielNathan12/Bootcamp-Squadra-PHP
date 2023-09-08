@@ -7,7 +7,7 @@ import { PessoaI } from '../PessoaI';
   providedIn: 'root'
 })
 export class PessoaService {
-  private apiUrl = 'http://localhost:3333/pessoa?login=joao.reis.vinte8';
+  private apiUrl = 'http://localhost:3333/pessoa';
 
   constructor(private http:HttpClient) { }
 

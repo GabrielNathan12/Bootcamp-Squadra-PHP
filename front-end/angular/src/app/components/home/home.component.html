@@ -1,8 +1,10 @@
 <div *ngFor="let uf of UfLista">
-  <p>Código UF: {{ uf.codigouf }}</p>
-  <p>Sigla: {{ uf.sigla }}</p>
-  <p>Nome: {{ uf.nome }}</p>
-  <p>Status: {{ uf.status }}</p>
+  <ul>
+    <li>Código UF: {{ uf.codigouf }}</li>
+    <li>Sigla: {{ uf.sigla }}</li>
+    <li>Nome: {{ uf.nome }}</li>
+    <li>Status: {{ uf.status }}</li>
+  </ul>
 </div>
 
 <div *ngFor="let municipio of MunicipioLista">
@@ -36,4 +38,5 @@
     <p>CEP: {{endereco.cep}}</p>
   </div>
 </div>
+
 

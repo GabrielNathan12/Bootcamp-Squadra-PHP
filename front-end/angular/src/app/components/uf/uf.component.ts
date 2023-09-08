@@ -1,38 +1,51 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output, Input } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UfI } from 'src/app/UfI';
+import { UfService } from 'src/app/services/uf.service';
 
 @Component({
   selector: 'app-uf',
   templateUrl: './uf.component.html',
-  styleUrls: ['./uf.component.css']
+  styleUrls: ['./uf.component.css'],
 })
 export class UfComponent {
-  @Output() onSumit = new EventEmitter<UfI>();
-  @Input()
-  ufForm!:FormGroup;
+  @Output() onSubmit = new EventEmitter<UfI>();
+  ufForm!: FormGroup;
+  @Input() Uflista! : UfI[];
 
-  ngOnInit(): void{
+  constructor(private ufService: UfService) {}
+
+  ngOnInit(): void {
     this.ufForm = new FormGroup({
-      id: new FormControl(''),
-      nome: new FormControl('',[Validators.required]),
-      sigla: new FormControl('',[Validators.required]),
-      status: new FormControl('',[Validators.required])})
+      nome: new FormControl('', [Validators.required]),
+      sigla: new FormControl('', [Validators.required]),
+      status: new FormControl('', [Validators.required]),
+    });
   }
 
-  get nome(){
+  get nome() {
     return this.ufForm.get('nome')!;
   }
-  get sigla(){
+  get sigla() {
     return this.ufForm.get('sigla')!;
   }
-  get status(){
+  get status() {
     return this.ufForm.get('status')!;
   }
-  enviar(){
-    if(this.ufForm.invalid){
+  validarNomes(){
+
+  }
+  enviar() {
+    if (this.ufForm.invalid) {
       return;
     }
-    console.log(this.ufForm.value);
+
+    const ufData: UfI = this.ufForm.value;
+    this.ufService.postUf(ufData).subscribe((response) => {
+      this.onSubmit.emit(ufData);
+      this.ufForm.reset();
+    });
   }
+
+
 }

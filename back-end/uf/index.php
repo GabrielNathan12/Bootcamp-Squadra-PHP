@@ -1,7 +1,7 @@
 <?php
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
     header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     header('Content-Type: application/json');
     require_once('../sistema/ConectarBD.php');
     require_once('../uf/ExecutarUf.php');
@@ -16,7 +16,11 @@
 
     $requisicao = $_SERVER['REQUEST_METHOD'];
 
-    $executarUf = new ExecutarUf($conexao);
-    http_response_code(200);
+    if($_SERVER['REQUEST_METHOD'] == 'OPTIONS'){
+        http_response_code(200);
+        exit();
+    }
 
+    $executarUf = new ExecutarUf($conexao);
     echo json_encode($executarUf->executar($requisicao));
+   

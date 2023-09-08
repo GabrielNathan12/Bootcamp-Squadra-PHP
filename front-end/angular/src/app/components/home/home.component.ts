@@ -18,6 +18,7 @@ export class HomeComponent {
   MunicipioLista: MunicipioI[] = [];
   bairroLista: BairroI[] = [];
   pessoaLista: PessoaI[] = [];
+  novoUf!: UfI;
 
   constructor(private ufService: UfService,
     private municipioService: MunicipioService, private bairroService: BairroService,private pessoaService: PessoaService){
@@ -28,7 +29,10 @@ export class HomeComponent {
 
   }
   getUfs():void{
-    this.ufService.getUf().subscribe((uf)=> (this.UfLista = uf));
+    this.ufService.getUf().subscribe((uf)=> {
+      this.UfLista = uf;
+
+    });
   }
 
   getMunicipio():void{
@@ -42,6 +46,9 @@ export class HomeComponent {
 
   getPessoa(): void{
     this.pessoaService.getPessoa().subscribe((pessoa) => this.pessoaLista = pessoa);
+  }
+  enviarUf(novoUf: UfI): void{
+    this.UfLista.push(novoUf);
   }
 }
 

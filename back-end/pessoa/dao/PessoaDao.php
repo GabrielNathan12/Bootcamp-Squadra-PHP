@@ -341,7 +341,10 @@
                     $codigoPessoa = intval($_GET['codigoPessoa']);
                     $sql .= " AND TP.codigoPessoa = :codigoPessoa";
                 }
-            
+                if(isset($_GET['nome'])){
+                    $nome = $_GET['nome'];
+                    $sql .= " AND TP.nome = :nome";
+                }
                 if (isset($_GET['idade'])) {
                     $idade = intval($_GET['idade']);
                     $sql .= " AND TP.idade = :idade";
@@ -363,7 +366,9 @@
                 if (isset($codigoPessoa)) {
                     $stmt->bindParam(':codigoPessoa', $codigoPessoa);
                 }
-            
+                if (isset($nome)) {
+                    $stmt->bindParam(':nome', $nome);
+                }
                 if (isset($idade)) {
                     $stmt->bindParam(':idade', $idade);
                 }

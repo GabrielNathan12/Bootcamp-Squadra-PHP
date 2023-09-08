@@ -53,7 +53,7 @@
                     }
                 }
                 else if($codigoMunicipio){
-                    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if(!$resultado){
                         return [];
                     }else{
@@ -61,7 +61,7 @@
                     }
                 }
                 else if($nome){
-                    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+                    $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     if(!$resultado){
                         return [];
                     }else {
@@ -162,6 +162,9 @@
 
                     $achouMunicipio = $this->verificarCodigoMunicipio($codigoMunicipio);
                     
+                    if(!is_int($codigoBairro)){
+                        throw new ErrosDaAPI('codigoBairro não nao e um numero', 400);
+                    }
                     if(!$achouMunicipio){
                         throw new ErrosDaAPI('Esse codigoMunicipio não existe no banco de dados', 400);
                     }

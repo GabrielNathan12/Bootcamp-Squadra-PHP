@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UfI } from 'src/app/UfI';
 
 @Component({
   selector: 'app-adicionar',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AdicionarComponent {
 
+  async enviar(uf: UfI){
+
+
+  }
 }
