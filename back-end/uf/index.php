@@ -8,10 +8,13 @@
     require_once('../uf/controller/ControladorUf.php');
     require_once('../uf/dao/UfDAO.php');
     require_once('../uf/model/UF.php');
-
     require_once('../sistema/ErrosDaAPI.php');
-    
-    
+
+
+    include_once('../uf/dao/servicos/ListarUfs.php');
+    include_once('../uf/dao/servicos/CriarUfs.php');
+    include_once('../uf/dao/servicos/AtualizarUfs.php');
+    include_once('../uf/dao/servicos/DeletarUfs.php');
 
 
     $requisicao = $_SERVER['REQUEST_METHOD'];

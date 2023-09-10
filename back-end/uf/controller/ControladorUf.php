@@ -16,14 +16,11 @@
                 $status = $dados['status'];
                 
                 $uf = new UF(null, $nome, $sigla, $status);
-                
+
                 $this->verificarCamposNulosParaCriacao($nome, $sigla, $status);
-                
                 $data = $this->ufDAO->criarUf($uf);
-
-                return $data;
-
                 
+                return $data;
             }
             catch (Exception $e) {
                 if($e instanceof ErrosDaAPI) {
@@ -80,11 +77,10 @@
                 throw new ErrosDaAPI('Campo status está definido como nulo', 400);
             }
         }
+        
         public function listarUF(){
             $data = $this->ufDAO->listarTodosUFs();
-           
             return $data;
-    
         }
 
         public function deletarUF($codigoUF){
