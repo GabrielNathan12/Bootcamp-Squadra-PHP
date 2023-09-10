@@ -16,7 +16,7 @@ CREATE TABLE TB_MUNICIPIO (
 CREATE TABLE TB_BAIRRO (
     codigoBairro SERIAL NOT NULL PRIMARY KEY,
     codigoMunicipio INT REFERENCES TB_MUNICIPIO(codigoMunicipio) ON DELETE CASCADE NOT NULL,
-    nome VARCHAR(50) NOT NULL UNIQUE,
+    nome VARCHAR(50) NOT NULL,
     status INT NOT null,
     constraint nomeBairro_codigoMunicipio unique (nome, codigoMunicipio)
 );

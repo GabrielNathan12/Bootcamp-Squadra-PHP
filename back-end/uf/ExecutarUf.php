@@ -18,9 +18,10 @@
                     break;
                     
                     case 'POST':
+
                         $listaUfs = $this->controladorUF->criarUf();
                         return $listaUfs;
-
+              
                     break;
 
                     case 'PUT':

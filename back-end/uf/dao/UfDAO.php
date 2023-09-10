@@ -85,8 +85,9 @@ public function listarTodosUFs() {
         $stmt = $this->conexao->prepare($sql);
         $stmt->execute();
         $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $resultado;
     }
-    return $resultado;
+
 }
 
     public function criarUf(UF $uf){

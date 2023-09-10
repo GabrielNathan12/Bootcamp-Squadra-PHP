@@ -20,7 +20,6 @@
                 $this->verificarCamposNulosParaCriacao($nome, $sigla, $status);
                 
                 $data = $this->ufDAO->criarUf($uf);
-                
 
                 return $data;
 
@@ -29,11 +28,11 @@
             catch (Exception $e) {
                 if($e instanceof ErrosDaAPI) {
                     http_response_code($e->getCode()); 
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
-                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
                 }
             }
         }
@@ -54,12 +53,12 @@
         public function atualizarUF($codigoUF ,UF $uf){
             try{
                 $this->verificarCamposNulosParaAtualizacao($uf->getCodigoUf(), $uf->getNomeUf(), $uf->getSiglaUf(), $uf->getStatusUf());
-                    return $this->ufDAO->atualizarUF($codigoUF, $uf);
+                return $this->ufDAO->atualizarUF($codigoUF, $uf);
             }
             catch(Exception $e){
                 if($e instanceof ErrosDaAPI) {
                     http_response_code($e->getCode()); 
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
@@ -89,7 +88,19 @@
         }
 
         public function deletarUF($codigoUF){
-            $data = $this->ufDAO->excluirUF($codigoUF);
-            return $data;
+            try{
+                $data = $this->ufDAO->excluirUF($codigoUF);
+                return $data;
+            }
+            catch(Exception $e){
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
+                }
+                else {
+                    http_response_code(500); 
+                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                }
+            }      
         }
     }
