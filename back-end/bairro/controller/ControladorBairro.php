@@ -22,13 +22,13 @@
                 return $dados;
             }
             catch(Exception $e){
-                if($e instanceof ErrosDaAPI){
-                    http_response_code($e->getCode());
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
-                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
                 }
             }
         }
@@ -69,30 +69,42 @@
 
                 $this->verificarCampusNulasParaAtualizacao($codigoBairro, $codigoMunicipio, $nome,  $status);
                 $bairro = new Bairro($codigoBairro, $codigoMunicipio, $nome, $status);
-                $dados = $this->bairroDAO->atualizarBairro($codigoMunicipio, $bairro);
+                $dados = $this->bairroDAO->atualizarBairro($codigoBairro, $bairro);
 
                 return $dados;
             }
             catch(Exception $e){
-                if($e instanceof ErrosDaAPI){
-                    http_response_code($e->getCode());
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
-                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
                 }
             }
         }
         public function deletarBairro(){
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            $codigoBairro = explode('/bairro', $url['path']);
+            try{
+                $url = parse_url($_SERVER['REQUEST_URI']);
+                $codigoBairro = explode('/bairro', $url['path']);
             
-            $id = end($codigoBairro);
-            $id = preg_replace('/[^0-9]/', '', $id);
-            $id = intval($id);
+                $id = end($codigoBairro);
+                $id = preg_replace('/[^0-9]/', '', $id);
+                $id = intval($id);
 
-            $dados = $this->bairroDAO->deletarBairro($id);
-            return $dados;
+                $dados = $this->bairroDAO->deletarBairro($id);
+                return $dados;
+            }
+            catch(Exception $e){
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
+                }
+                else {
+                    http_response_code(500); 
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                }
+            }       
         }
     }
