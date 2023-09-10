@@ -1,4 +1,8 @@
 <?php
+    include_once('../uf/dao/servicos/ListarUfs.php');
+    include_once('../uf/dao/servicos/CriarUfs.php');
+    include_once('../uf/dao/servicos/AtualizarUfs.php');
+    include_once('../uf/dao/servicos/DeletarUfs.php');
 
 class UfDAO {
     private $conexao;
