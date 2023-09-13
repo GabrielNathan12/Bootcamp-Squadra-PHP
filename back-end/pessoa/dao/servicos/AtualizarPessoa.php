@@ -168,7 +168,7 @@ class AtualizarPessoa extends PessoaDao {
                 if (!is_null($codigoEndereco) && $codigoEndereco !== 0) {
                     $codigosEnderecosFornecidos[] = $codigoEndereco;
                 } else {
-                    // Se o código do endereço for nulo ou zero, é um novo endereço
+                 
                     $codigosEnderecosNovos[] = $endereco;
                 }
             }
