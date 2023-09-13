@@ -5,6 +5,7 @@
         public function __construct($conexao){
             $this->pessoaDAO = new PessoaDao($conexao);
         }
+        
         public function criarPessoa(){
             try{
                 $dados = json_decode(file_get_contents('php://input'), true);
@@ -30,20 +31,18 @@
                         $this->verificarCamposNulosParaCriacaoEndereco($codigoBairro, $nomeRua, $numero, $complemento, $cep);
                     }
                 }
-
-                
                 $listaPessoas = $this->pessoaDAO->criarPessoa($pessoa, $enderecos);
-
+                
                 return $listaPessoas;
             }
             catch(Exception $e){
-                if($e instanceof ErrosDaAPI){
-                    http_response_code($e->getCode());
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
-                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
                 }
             }
         }
@@ -68,6 +67,7 @@
                 throw new ErrosDaAPI('Campo status está definido como null', 400);
             }
         }
+
         private function verificarCamposNulosParaCriacaoEndereco($codigoBairro, $nomeRua, $numero, $complemento, $cep){
             if(is_null($codigoBairro)){
                 throw new ErrosDaAPI('Campo codigoBairro está definido como null', 400);
@@ -97,44 +97,43 @@
                 $senha = $dados['senha'];
                 $status = $dados['status'];
                 $enderecos = $dados['enderecos'];
-                
-                $pessoa = new Pessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status);
+              
+                $pessoa = new Pessoa($codigoPessoa, $nome, $sobrenome, $idade,$login, $senha, $status);
                 $this->verificarCamposNulosParaAtualizacaoPessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status);
 
                 if(isset($dados['enderecos']) && is_array($dados['enderecos'])) {
                     foreach ($dados['enderecos'] as $endereco) {
-                        $codigoEndereco = $endereco['codigoEndereco'];
                         $codigoPessoa = $endereco['codigoPessoa'];
                         $codigoBairro = $endereco['codigoBairro'];
                         $nomeRua = $endereco['nomeRua'];
                         $numero = $endereco['numero'];
                         $complemento = $endereco['complemento'];
                         $cep = $endereco['cep'];
-                        $this->verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa,$codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep);
-                    }
-                }
-              
-                $dados = $this->pessoaDAO->atualizarPessoa($codigoPessoa, $pessoa, $codigoEndereco, $enderecos);
-                return $dados;
+                       
+                        
+                        $this->verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa, $codigoBairro, $nomeRua, $numero, $complemento, $cep);
 
+                    }
+                    $dados = $this->pessoaDAO->atualizarPessoa($codigoPessoa, $pessoa, $enderecos);
+                  
+                    return $dados;
+                }
             }
             catch(Exception $e){
-                if($e instanceof ErrosDaAPI){
-                    http_response_code($e->getCode());
-                    echo json_encode(array("mensagem" => $e->getMessage(), "status" => $e->getCode()));
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
                 }
                 else {
                     http_response_code(500); 
-                    echo json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
                 }
             }
         }
-        private function verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa,$codigoEndereco, $codigoBairro, $nomeRua, $numero, $complemento, $cep){
+
+        private function verificarCamposNulosParaAtualizacaoEndereco($codigoPessoa, $codigoBairro, $nomeRua, $numero, $complemento, $cep){
             if(is_null($codigoPessoa)){
                 throw new ErrosDaAPI('Campo codigoPessoa está definido como null', 400);
-            }
-            else if(is_null($codigoEndereco)){
-                throw new ErrosDaAPI('Campo codigoEndereco está definido como null', 400);
             }
             else if(is_null($codigoBairro)){
                 throw new ErrosDaAPI('Campo codigoBairro está definido como null', 400);
@@ -152,6 +151,7 @@
                 throw new ErrosDaAPI('Campo cep está definido como null', 400);
             }
         }
+
         private function verificarCamposNulosParaAtualizacaoPessoa($codigoPessoa,  $nome, $sobrenome, $idade,$login, $senha, $status){
             if(is_null($codigoPessoa)){
                 throw new ErrosDaAPI('Campo codigoPessoa está definido como null', 400);
@@ -175,17 +175,31 @@
                 throw new ErrosDaAPI('Campo status está definido como null', 400);
             }
         }
-        public function deletarPessoa(){
-            $url = parse_url($_SERVER['REQUEST_URI']);
-            $codigoPessoa = explode('/pessoa', $url['path']);
-            
-            $id = end($codigoPessoa);
-            $id = preg_replace('/[^0-9]/', '', $id);
-            $id = intval($id);
 
-            $dados = $this->pessoaDAO->deletarPessoa($id);
-            return $dados;
+        public function deletarPessoa(){
+            try{
+                $url = parse_url($_SERVER['REQUEST_URI']);
+                $codigoPessoa = explode('/pessoa', $url['path']);
+            
+                $id = end($codigoPessoa);
+                $id = preg_replace('/[^0-9]/', '', $id);
+                $id = intval($id);
+
+                $dados = $this->pessoaDAO->deletarPessoa($id);
+                return $dados;
+            }
+            catch(Exception $e){
+                if($e instanceof ErrosDaAPI) {
+                    http_response_code($e->getCode()); 
+                    return json_decode($e->getRespostaJSON());
+                }
+                else {
+                    http_response_code(500); 
+                    return json_encode(array("mensagem" => 'Erro interno no servidor', "status" => 500, 'error' => $e->getMessage()));
+                }
+            }
         }
+
         public function listarPessoa(){
             $listaPessoas = $this->pessoaDAO->listarPessoa();
             return $listaPessoas;
