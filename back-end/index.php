@@ -19,6 +19,7 @@
       die('arquivo de configuração do banco de dados ".env" não encontrado.');
    }
 
+   $tipoBanco = getenv('DBTIPO');
    $dbNome = getenv('DBNOME');
    $dbHost = getenv('DBHOST');
    $dbUser = getenv('DBUSER');
